@@ -1,49 +1,43 @@
+import { Block, Text } from "galio-framework";
 import React from "react";
 import {
-  StyleSheet,
-  ImageBackground,
   Dimensions,
+  ImageBackground,
+  KeyboardAvoidingView,
   StatusBar,
-  KeyboardAvoidingView
+  StyleSheet,
 } from "react-native";
-import { Block, Checkbox, Text, theme } from "galio-framework";
-
 import { Button, Icon, Input } from "../components";
-import { Images, argonTheme } from "../constants";
-import {login} from '../controllers/api.controller';
+import { argonTheme, Images } from "../constants";
+import { login } from "../controllers/api.controller";
 
 const { width, height } = Dimensions.get("screen");
 
 class Onboarding extends React.Component {
-  state={
-      mail:'',
-      password:''
-    }
-  
-  
-  handleLogin()
-  {
-    let user={
-      email: this.state.mail,
-      password: this.state.password
-    }
-    console.log("apreto login",user)
-    this.validarLogin(user);
-    
-  }
-  async validarLogin (user)
-  {
-    console.log("validar login",user)
-    let rdo = await login(user);
-    console.log("rdo:",rdo)
-    if (rdo.rdo===0)
-    {
-      alert("se ha validado el usuarios");
-    }
-    else{
-      alert("ocurrio un error: " + rdo.mensaje)
-    }
+  state = {
+    email: "",
+    password: "",
+  };
 
+  const [generos, seteneros] = useState(initialState)
+
+  handleLogin = () => {
+    let user = {
+      email: this.state.email,
+      password: this.state.password,
+    };
+    console.log("apreto login", user);
+    this.validarLogin(user);
+  };
+  async validarLogin(user) {
+    console.log("validar login", user);
+    let rdo = await login(user);
+    console.log("rdo:", rdo);
+    if (rdo.rdo === 0) {
+      alert("se ha validado el usuarios");
+    } else {
+      alert("ocurrio un error: " + rdo.mensaje);
+    }
   }
   render() {
     return (
@@ -59,7 +53,6 @@ class Onboarding extends React.Component {
                 <Text color="#8898AB" size={20}>
                   Acceder
                 </Text>
-                
               </Block>
               <Block flex>
                 <Block flex center>
@@ -72,7 +65,7 @@ class Onboarding extends React.Component {
                       <Input
                         borderless
                         placeholder="Email"
-                        onChangeText={value => this.setState({ mail: value })}
+                        onChangeText={(value) => this.setState({ mail: value })}
                         iconContent={
                           <Icon
                             size={16}
@@ -89,7 +82,9 @@ class Onboarding extends React.Component {
                         password
                         borderless
                         placeholder="Password"
-                        onChangeText={value => this.setState({ password: value })}
+                        onChangeText={(value) =>
+                          this.setState({ password: value })
+                        }
                         iconContent={
                           <Icon
                             size={16}
@@ -101,35 +96,29 @@ class Onboarding extends React.Component {
                         }
                       />
                     </Block>
-                    
+
                     <Block middle>
-                      <Button 
-                        color="primary" 
+                      <Button
+                        color="primary"
                         style={styles.createButton}
-                        onPress={this.handleLogin.bind(this)}
-                        >
-                        
+                        onPress={this.handleLogin}
+                      >
                         <Text bold size={14} color={argonTheme.COLORS.WHITE}>
                           ACEPTAR
                         </Text>
                       </Button>
-
-                      
                     </Block>
 
                     <Block middle>
-                      <Button 
-                        color="primary" 
+                      <Button
+                        color="primary"
                         style={styles.createButton}
-                        onPress={this.handleLogin.bind(this)}
-                        >
-                        
+                        onPress={this.handleLogin}
+                      >
                         <Text bold size={14} color={argonTheme.COLORS.WHITE}>
                           CREAR CUENTA
                         </Text>
                       </Button>
-
-                      
                     </Block>
                   </KeyboardAvoidingView>
                 </Block>
@@ -151,17 +140,17 @@ const styles = StyleSheet.create({
     shadowColor: argonTheme.COLORS.BLACK,
     shadowOffset: {
       width: 0,
-      height: 4
+      height: 4,
     },
     shadowRadius: 8,
     shadowOpacity: 0.1,
     elevation: 1,
-    overflow: "hidden"
+    overflow: "hidden",
   },
   socialConnect: {
     backgroundColor: argonTheme.COLORS.WHITE,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: "#8898AA"
+    borderColor: "#8898AA",
   },
   socialButtons: {
     width: 120,
@@ -170,29 +159,29 @@ const styles = StyleSheet.create({
     shadowColor: argonTheme.COLORS.BLACK,
     shadowOffset: {
       width: 0,
-      height: 4
+      height: 4,
     },
     shadowRadius: 8,
     shadowOpacity: 0.1,
-    elevation: 1
+    elevation: 1,
   },
   socialTextButtons: {
     color: argonTheme.COLORS.PRIMARY,
     fontWeight: "800",
-    fontSize: 14
+    fontSize: 14,
   },
   inputIcons: {
-    marginRight: 12
+    marginRight: 12,
   },
   passwordCheck: {
     paddingLeft: 15,
     paddingTop: 13,
-    paddingBottom: 30
+    paddingBottom: 30,
   },
   createButton: {
     width: width * 0.5,
-    marginTop: 25
-  }
+    marginTop: 25,
+  },
 });
 
 export default Onboarding;

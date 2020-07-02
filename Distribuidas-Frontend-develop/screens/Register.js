@@ -1,68 +1,67 @@
+import { Block, Checkbox, Text } from "galio-framework";
 import React from "react";
 import {
-  StyleSheet,
-  ImageBackground,
   Dimensions,
+  ImageBackground,
+  KeyboardAvoidingView,
   StatusBar,
-  KeyboardAvoidingView
+  StyleSheet,
 } from "react-native";
-import { Block, Checkbox, Text, theme } from "galio-framework";
-
 import { Button, Icon, Input } from "../components";
-import { Images, argonTheme } from "../constants";
-import { login } from '../controllers/api.controller';
+import { argonTheme, Images } from "../constants";
+import { register, getGenres } from "../controllers/api.controller";
 
 const { width, height } = Dimensions.get("screen");
 
 class Register extends React.Component {
   state = {
-    nombre:'',
-    mail: '',
-    password: '',
-    genres:[]
-  }
+    name: "",
+    email: "",
+    password: "",
+    genres: [],
+  };
 
-
-  handleLogin() {
-    let user = {
-      nombre:this.state.nombre,
-      email: this.state.mail,
-      password: this.state.password
+    setGeneros = async () => {
+      try {
+        const resp = await getGenres();
+        this.setState( {genres : resp.genres});
+      } catch (error) {
+        console.log(error);
+      }
     }
-    console.log("Hace login/Registra", user)
-    this.validarLogin(user);
 
-  }
+    componentDidMount(){
+      this.setGeneros();
+    }
 
-
-  async validarLogin(user) {
-    console.log("validar login", user)
-    let rdo = await login(user);
-
-
-    console.log("rdo:", rdo)
-    if (rdo.rdo === 0) {
+   handleRegister = async () => {
+    console.log("user", this.state.name);
+    const user = {
+      name: this.state.name,
+      email: this.state.email,
+      password: this.state.password,
+    };
+    try {
+      await register(user);
+      this.props.navigation.navigate("Home");
       alert("Te Logueaste/Registraste con exito");
+    } catch (error) {
+      console.log("error", error);
     }
-    else {
-      alert("ocurrio un error: " + rdo.mensaje)
-    }
-
   }
+
   ///////Categorías de peliculas elegidas
-//   checkItem = (item) => {
-//     const { checked } = this.state;
-//     console.log(item)
-//     if (!checked.includes(item)) {
-//       this.setState({ checked: [...checked, item] });
-      
-//     } else {
-//       this.setState({ checked: checked.filter(a => a !== item) });
-//     }
-//     console.log(checked)
-// };
+  //   checkItem = (item) => {
+  //     const { checked } = this.state;
+  //     console.log(item)
+  //     if (!checked.includes(item)) {
+  //       this.setState({ checked: [...checked, item] });
 
-
+  //     } else {
+  //       this.setState({ checked: checked.filter(a => a !== item) });
+  //     }
+  //     console.log(checked)
+  // };
 
   render() {
     return (
@@ -74,8 +73,10 @@ class Register extends React.Component {
         >
           <Block flex middle>
             <Block style={styles.registerContainer}>
-              <Block flex={0.10} middle style={styles.socialConnect}>
-                <Text bold size={16} color={argonTheme.COLORS.WHITE}>Crear Cuenta</Text>
+              <Block flex={0.1} middle style={styles.socialConnect}>
+                <Text bold size={16} color={argonTheme.COLORS.WHITE}>
+                  Crear Cuenta
+                </Text>
               </Block>
               <Block flex>
                 <Block flex center>
@@ -84,11 +85,11 @@ class Register extends React.Component {
                     behavior="padding"
                     enabled
                   >
-                    <Block width={width * 0.8} style={{ marginBottom: 5}}>
+                    <Block width={width * 0.8} style={{ marginBottom: 5 }}>
                       <Input
                         borderless
                         placeholder="Ingresa tu nombre"
-                        onChangeText={value => this.setState({ mail: value })}
+                        onChangeText={(value) => this.setState({ name: value })}
                         iconContent={
                           <Icon
                             size={16}
@@ -101,12 +102,13 @@ class Register extends React.Component {
                       />
                     </Block>
 
-
-                    <Block width={width * 0.8} style={{ marginBottom: 5}}>
+                    <Block width={width * 0.8} style={{ marginBottom: 5 }}>
                       <Input
                         borderless
                         placeholder="Ingresa tu Email"
-                        onChangeText={value => this.setState({ mail: value })}
+                        onChangeText={(value) =>
+                          this.setState({ email: value })
+                        }
                         iconContent={
                           <Icon
                             size={16}
@@ -118,14 +120,16 @@ class Register extends React.Component {
                         }
                       />
                     </Block>
-                    <Block width={width * 0.8} style={{ marginBottom: 5}}>
+                    <Block width={width * 0.8} style={{ marginBottom: 5 }}>
                       <Input
                         password
                         borderless
                         placeholder="Nueva Password"
                         secureTextEntry={true}
-                        underlineColorAndroid={'transparent'}
-                        onChangeText={value => this.setState({ password: value })}
+                        underlineColorAndroid={"transparent"}
+                        onChangeText={(value) =>
+                          this.setState({ password: value })
+                        }
                         iconContent={
                           <Icon
                             size={16}
@@ -138,31 +142,27 @@ class Register extends React.Component {
                       />
                     </Block>
 
-                    <Block flex style={[{flexDirection: 'column', alignContent: 'stretch'}]}>
-                    <Text style={styles.registerContainer.header}>¿Que categorías te interesan?:</Text>
-                    
-                    {/* <Checkbox color="primary" onChange={() => checkItem(item)} label="Acción"/> */}
-                    <Checkbox color="primary" label="Aventura"/>
-                    <Checkbox color="primary" label="Animación"/>
-                    <Checkbox color="primary"  label="Comedia"/>
-                    <Checkbox color="primary"  label="Crimen"/>
-                    <Checkbox color="primary"  label="Documental"/>
-                    <Checkbox color="primary"  label="Drama"/>
-                    <Checkbox color="primary"  label="Familia"/>
-                    <Checkbox color="primary"  label="Fantasía"/>
-                    <Checkbox color="primary" label="Historia"/>
-                    <Checkbox color="primary"  label="Terror"/>
-                    <Checkbox color="primary"  label="Música"/>
-                    <Checkbox color="primary"  label="Misterio"/>
-                    <Checkbox color="primary"  label="Romance"/>
-                    <Checkbox color="primary"  label="Ciencia ficción"/>
+                    <Block
+                      flex
+                      style={[
+                        { flexDirection: "column", alignContent: "stretch" },
+                      ]}
+                    >
+                      <Text style={styles.registerContainer.header}>
+                        ¿Que categorías te interesan?:
+                      </Text>
+                      {
+                        this.state.genres.map((g)=>(
+                          <Checkbox color="primary" label={g.name} />
+                        ))
+                      }
                     </Block>
 
                     <Block middle>
                       <Button
                         color="PRIMARY"
                         style={styles.createButton}
-                        onPress={this.handleLogin.bind(this)}
+                        onPress={this.handleRegister}
                       >
                         <Text bold size={14} color={argonTheme.COLORS.WHITE}>
                           Registrar
@@ -171,20 +171,17 @@ class Register extends React.Component {
                     </Block>
 
                     <Block middle>
-                      <Button 
-                        color="primary" 
+                      <Button
+                        color="primary"
                         style={styles.createButton}
-                        onPress={()=> navigation.navigate("Profile")}
-                        >
-                        
+                        onPress={() => navigation.navigate("Profile")}
+                      >
                         <Text bold size={14} color={argonTheme.COLORS.WHITE}>
                           VOLVER
                         </Text>
                       </Button>
-
-                      
                     </Block>
-{}
+                    {}
                   </KeyboardAvoidingView>
                 </Block>
               </Block>
@@ -205,17 +202,17 @@ const styles = StyleSheet.create({
     shadowColor: argonTheme.COLORS.BLACK,
     shadowOffset: {
       width: 0,
-      height: 4
+      height: 4,
     },
     shadowRadius: 8,
     shadowOpacity: 0.1,
     elevation: 1,
-    overflow: "hidden"
+    overflow: "hidden",
   },
   socialConnect: {
     backgroundColor: argonTheme.COLORS.PRIMARY,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: "#8898AA"
+    borderColor: "#8898AA",
   },
   // socialButtons: {
   //   width: 110,
@@ -236,23 +233,22 @@ const styles = StyleSheet.create({
   //   fontSize: 14
   // },
   inputIcons: {
-    marginRight: 12
+    marginRight: 12,
   },
   passwordCheck: {
     paddingLeft: 15,
     paddingTop: 13,
-    paddingBottom: 30
+    paddingBottom: 30,
   },
   createButton: {
     width: width * 0.5,
-    marginBottom: 12
+    marginBottom: 12,
   },
-  header:{
-        fontSize:24,
-        color:'#fff',
-        backgroundColor: "#fff",
-    }
-  
+  header: {
+    fontSize: 24,
+    color: "#fff",
+    backgroundColor: "#fff",
+  },
 });
 
 export default Register;

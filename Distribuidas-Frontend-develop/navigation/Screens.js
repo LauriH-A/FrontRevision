@@ -174,8 +174,6 @@ function ProfileStack(props) {
             headerTransparent: true
           }}
         />
-           
-     
       </Stack.Navigator>
       
     );
@@ -194,7 +192,7 @@ function ProfileStack(props) {
         />
         {/* recordar cambiar aqui por AppStack por Registro */}
         <Stack.Screen name="App" component={Register} />
-        <Stack.Screen name="Hom" component={AppStack} />
+        <Stack.Screen name="Home" component={AppStack} />
 
       </Stack.Navigator>
       

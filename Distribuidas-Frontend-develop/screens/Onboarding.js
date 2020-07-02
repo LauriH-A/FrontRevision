@@ -1,48 +1,39 @@
+import { Block, Text } from "galio-framework";
 import React from "react";
 import {
-  StyleSheet,
-  ImageBackground,
-  Dimensions,
-  StatusBar,
-  KeyboardAvoidingView
+  Dimensions, ImageBackground,
+  KeyboardAvoidingView, StatusBar, StyleSheet
 } from "react-native";
-import Register from "./Register";
-import { Block, Checkbox, Text, theme } from "galio-framework";
-
 import { Button, Icon, Input } from "../components";
-import { Images, argonTheme } from "../constants";
-import {login} from '../controllers/api.controller';
-import OnboardingStack from "../navigation/Screens";
-import HomeSlack from "../navigation/Screens";
-
+import { argonTheme, Images } from "../constants";
+import { login } from '../controllers/api.controller';
 
 const { width, height } = Dimensions.get("screen");
 
 class Onboarding extends React.Component {
   state={
-      mail:'',
+      email:'',
       password:''
     }
   
-  
-  handleLogin()
+handleLogin = () =>
   {
     let user={
-      email: this.state.mail,
+      email: this.state.email,
       password: this.state.password
     }
-    console.log("apreto login",user)
+    //console.log("apreto login",user)
     this.validarLogin(user);
-    
   }
-  async validarLogin (user)
+
+  validarLogin = async (user) =>
   {
-    console.log("validar login",user)
     let rdo = await login(user);
-    console.log("rdo:",rdo)
+    //console.log("rdo:",rdo)
     if (rdo.rdo===0)
     {
-      alert("se ha validado el usuarios");
+      //alert("se ha validado el usuarios");
+      this.props.navigation.navigate("Home")
     }
     else{
       alert("ocurrio un error: " + rdo.mensaje)
@@ -51,7 +42,7 @@ class Onboarding extends React.Component {
   }
   render() {
 
-    const {navigation } =this.props;
+    const {navigation} =this.props;
     return (
       <Block flex middle>
         <StatusBar hidden />
@@ -78,7 +69,7 @@ class Onboarding extends React.Component {
                       <Input
                         borderless
                         placeholder="Email"
-                        onChangeText={value => this.setState({ mail: value })}
+                        onChangeText={value => this.setState({ email: value })}
                         iconContent={
                           <Icon
                             size={16}
@@ -112,7 +103,7 @@ class Onboarding extends React.Component {
                       <Button 
                         color="primary" 
                         style={styles.createButton}
-                        onPress={()=> navigation.navigate("Hom")}
+                        onPress={this.handleLogin}
                         >
                         
                         <Text bold size={14} color={argonTheme.COLORS.WHITE}>
