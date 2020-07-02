@@ -33,7 +33,7 @@ handleLogin = () =>
     if (rdo.rdo===0)
     {
       //alert("se ha validado el usuarios");
-      this.props.navigation.navigate("Home")
+      this.props.navigation.navigate("Home")//Rutea a Home
     }
     else{
       alert("ocurrio un error: " + rdo.mensaje)

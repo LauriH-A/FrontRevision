@@ -21,7 +21,7 @@ class Register extends React.Component {
     genres: [],
   };
 
-    setGeneros = async () => {
+    setGeneros = async () => {//setear generos del state
       try {
         const resp = await getGenres();
         this.setState( {genres : resp.genres});
@@ -40,9 +40,10 @@ class Register extends React.Component {
       name: this.state.name,
       email: this.state.email,
       password: this.state.password,
+      //opcional, Generos seleccionados
     };
     try {
-      await register(user);
+      await register(user);//Llamo al servicio
       this.props.navigation.navigate("Home");
       alert("Te Logueaste/Registraste con exito");
     } catch (error) {
@@ -94,7 +95,7 @@ class Register extends React.Component {
                           <Icon
                             size={16}
                             color={argonTheme.COLORS.ICON}
-                            name="ic_user_24px"
+                            name="bell"
                             family="ArgonExtra"
                             style={styles.inputIcons}
                           />
@@ -152,7 +153,7 @@ class Register extends React.Component {
                         ¿Que categorías te interesan?:
                       </Text>
                       {
-                        this.state.genres.map((g)=>(
+                        this.state.genres.map((g)=>( //Funcion map Por cada genero crea un checkbox
                           <Checkbox color="primary" label={g.name} />
                         ))
                       }

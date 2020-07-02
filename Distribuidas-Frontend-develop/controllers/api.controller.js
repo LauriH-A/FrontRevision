@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export let token;
+export let token; 
 const movieKey = "bca1fa37079b46ecff7e9b5b7a7ad2e3"
 
 export const register = async function (data) {
@@ -12,8 +12,8 @@ export const register = async function (data) {
   };
   console.log("user", newUser);
   try {
-    const resp = await axios.post(url, newUser);
-    token = resp.data.token;
+    const resp = await axios.post(url, newUser);//hace conexion con el servicio/endopiont del back. Espera la respuesta del back
+    token = resp.data.token; //Guarda el token que recibió del backend
     return true;
   } catch (error) {
     console.log("error", error);
@@ -122,7 +122,7 @@ export const Busqueda = async function (votos, puntuacion, tipo, cines) {
   return busquedaAMostrar;
 };
 
-export const getGenres = async function () {
+export const getGenres = async function () {//El que va!
   const url = "https://api.themoviedb.org/3/genre/movie/list?api_key=bca1fa37079b46ecff7e9b5b7a7ad2e3&language=es-Ar&sort_by=popularity.desc&include_adult=false&include_video=false";
   try{
     const res = await axios.get(url);

@@ -19,7 +19,7 @@ class Onboarding extends React.Component {
     password: "",
   };
 
-  const [generos, seteneros] = useState(initialState)
+
 
   handleLogin = () => {
     let user = {
